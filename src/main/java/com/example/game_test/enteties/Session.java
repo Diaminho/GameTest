@@ -1,15 +1,13 @@
 package com.example.game_test.enteties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="sessions")
 public class Session {
     @Id
     @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="user_id")
@@ -18,8 +16,7 @@ public class Session {
     public Session() {
     }
 
-    public Session(Long id, Long userId) {
-        this.id = id;
+    public Session(Long userId) {
         this.userId = userId;
     }
 

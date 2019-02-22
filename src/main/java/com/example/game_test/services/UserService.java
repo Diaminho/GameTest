@@ -5,6 +5,7 @@ import com.example.game_test.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 @Service
@@ -25,11 +26,17 @@ public class UserService {
         return this.userRepository.findUserByLogin(login);
     }
 
+    public User findById(Long id){return this.userRepository.findById(id).orElse(null);}
+
+
+    //add user
     public void addUser(String login, String password){
         User user=new User.Builder(login, password).build();
         userRepository.save(user);
     }
 
+
+    //check if user with login and password is presnted in db
     public boolean checkUserInDB(String login, String password){
         List<User> userList=userRepository.findAll();
         for (User u:userList){
@@ -38,4 +45,6 @@ public class UserService {
         }
         return false;
     }
+
+
 }

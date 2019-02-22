@@ -10,8 +10,17 @@
 
 Ваш рейтинг: ${rating}
 
+<form action="search" method="post">
+    <input type="submit" value="Поиск соперника">
+</form>
+
+
 <form action="menu" method="post">
-    <input type="submit" value="Назад">
+    <input type="submit" value="Назад в меню">
+</form>
+
+<form action="quit" method="post">
+    <input type="submit" value="Выйти">
 </form>
 
 </body>
