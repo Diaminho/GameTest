@@ -2,50 +2,67 @@ package com.example.game_test.services;
 
 import com.example.game_test.enteties.Session;
 import com.example.game_test.enteties.User;
-import com.example.game_test.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Service
 public class AuthService {
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    SessionService sessionService;
+    private SessionService sessionService;
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public SessionService getSessionService() {
+        return sessionService;
+    }
+
+    public void setSessionService(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     public AuthService() {
     }
 
-
+    //auth user
     public String authUser(String login, String password, ModelMap modelMap){
+        //check if null params are presented
+        if (login.compareTo("")==0 || password.compareTo("")==0){
+            return "auth";
+        }
         User user=userService.findUserByLogin(login);
-
         if(user!=null) {
-            if(userService.checkUserInDB(user.getLogin(), user.getPassword())) {
-                modelMap.put("login", login);
+            int authStatus=userService.checkUserInDB(login, password);
+            if(authStatus==0) {
+                //if user with login and pass found
                 Session  session=sessionService.findSessionByUserId(user.getId());
-                if(session==null) {
-                    session = sessionService.createSessionForUserId(user.getId());
+                if(session!=null) {
+                    modelMap.put("sessionId", session.getId());
                 }
-                modelMap.put("sessionId", session.getId());
+                //create session
+                else {
+                    session = sessionService.createSessionForUserId(user.getId());
+                    modelMap.put("sessionId", session.getId());
+                }
                 return "redirect:/menu";
             }
-            else{
+            else if(authStatus==1){
+                modelMap.put("info", "Password is incorrect");
                 return "auth";
             }
         }
-
-        ///
+        ///if user not found create new user
         userService.addUser(login,password);
+        modelMap.put("info", "User "+login+" created");
         return "auth";
         ///
-
     }
-
 }

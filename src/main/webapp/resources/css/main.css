@@ -1,0 +1,42 @@
+input {
+    background-color: lightskyblue;
+    border: none;
+    color: midnightblue;
+    padding: 8px 8px;
+    text-decoration: none;
+    margin: 4px 4px;
+    cursor: pointer;
+}
+p {
+    #text-align: center;
+    color: midnightblue;
+}
+
+h1 {
+    #text-align: center;
+    color: midnightblue;
+    font-size: 24px;
+}
+
+body {
+    background-image: url(../images/background-image.jpg);
+    text-align: center;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+}
+
+progress.rtl {
+    direction: rtl;
+}
+
+progress[value] {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+}

@@ -1,6 +1,5 @@
 package com.example.game_test.web;
 
-import com.example.game_test.repositories.UserRepository;
 import com.example.game_test.services.AuthService;
 import com.example.game_test.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +19,14 @@ public class AuthController {
     public AuthController() {
     }
 
-
     @ModelAttribute("sessionId")
-    public String sessionId() {
-        return " ";
+    public Long sessionId() {
+        return -1L;
     }
-
 
     @PostMapping(value ={ "/auth", "/"})
     public ModelAndView doAuth(ModelMap modelMap,@RequestParam("login") String login, @RequestParam String password){
         if (login!=null && password!=null) {
-            //modelMap.put("login", login);
-            //return new ModelAndView("menu", modelMap);
             return new ModelAndView(authService.authUser(login, password, modelMap), modelMap);
         }
         else
@@ -43,11 +38,10 @@ public class AuthController {
         return "auth";
     }
 
-
     @RequestMapping(value="/quit")
     public String endSession(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
         sessionService.deleteSession(sessionId);
         sessionId=null;
-        return "auth";
+        return "redirect:/auth";
     }
 }

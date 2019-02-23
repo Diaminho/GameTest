@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-//@SessionAttributes("login")
 public class DuelInfoController {
     @Autowired
     DuelInfoService duelInfoService;
@@ -17,8 +16,6 @@ public class DuelInfoController {
 
     @RequestMapping("/duelInfo")
     public ModelAndView showRating(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
-        //modelMap.put("sessionId", sessionId);
-        System.out.println();
         return new ModelAndView(duelInfoService.showRating(modelMap, sessionId), modelMap);
     }
 }

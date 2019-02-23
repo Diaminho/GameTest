@@ -9,9 +9,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class SessionService {
     @Autowired
-    SessionRepository sessionRepository;
+    private SessionRepository sessionRepository;
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    public SessionRepository getSessionRepository() {
+        return sessionRepository;
+    }
+
+    public void setSessionRepository(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     public Session findSessionById(Long id){
         return sessionRepository.findSessionById(id);
@@ -33,5 +49,9 @@ public class SessionService {
 
     public User findUserBySessionId(Long sessionId){
         return userService.findById(findSessionById(sessionId).getUserId());
+    }
+
+    public Session findById(Long id){
+        return sessionRepository.findById(id).orElse(null);
     }
 }

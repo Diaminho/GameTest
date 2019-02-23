@@ -1,26 +1,57 @@
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
+<% Date start = new Date(); %>
 <head>
-    <title>Главное меню</title>
-    <!link href="/css/main.css" rel="stylesheet">
+    <title>Дуэль</title>
+    <link rel="stylesheet" href="resources/css/main.css">
 </head>
-<body>
-<h2 class="hello-title">Дуэль, ${login}</h2>
+    <body>
+        <div class="wrapper">
+            <div class="content">
+                <h1>Начинается дуэль, ${login}</h1>
 
-Ваш оппонент: ${opponentLogin}
-<br/>
-Ваш показатель жизни: ${userHp}
-<br/>
-Показатель жизни соперника: ${opponentHp}
-<br/>
-<form action="duel" method="post">
-    <input type="submit" value="Начать дуэль">
-</form>
+                <table align="center" cellspacing="5" cellpadding="5">
+                    <tr>
+                        <td><p>Вы: ${login}</p></td>
+                        <td><p>Ваш оппонент: ${opponentLogin} </p></td>
+                    </tr>
+                    <tr>
+                        <td><p>Ваш показатель жизни: ${userHp}</p></td>
+                        <td><p>Показатель жизни соперника: ${opponentHp}</p></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <progress max=${userHpBeforeDuel} value=${userHp}>
+                            </progress>
+                        </td>
+                        <td>
+                            <progress max=${opponentHpBeforeDuel} value=${opponentHp}>
+                            </progress>
+                        </td>
+                    </tr>
+                </table>
 
-<form action="quit" method="post">
-    <input type="submit" value="Выйти">
-</form>
+                <p>${info}</p>
 
-</body>
+                <p>
+                    <form action="attack" method="post">
+                        <input type="submit" value="Атака">
+                    </form>
+                </p>
+                <p>
+                    <form action="menu" method="post">
+                        <input type="submit" value="Выйти">
+                    </form>
+                </p>
+            </div>
+            <div class="footer">
+                <p>page:
+                    <% Date end = new Date(); %>
+                    <%= end.getTime() - start.getTime() %>ms
+                </p>
+            </div>
+        </div>
+    </body>
 </html>
