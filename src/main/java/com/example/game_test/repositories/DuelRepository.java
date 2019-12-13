@@ -1,6 +1,6 @@
 package com.example.game_test.repositories;
 
-import com.example.game_test.enteties.Duel;
+import com.example.game_test.entity.Duel;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

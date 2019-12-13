@@ -1,6 +1,6 @@
 package com.example.game_test.repositories;
 
-import com.example.game_test.enteties.User;
+import com.example.game_test.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

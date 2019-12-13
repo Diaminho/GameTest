@@ -1,7 +1,7 @@
 package com.example.game_test.services;
 
-import com.example.game_test.enteties.Session;
-import com.example.game_test.enteties.User;
+import com.example.game_test.entity.Session;
+import com.example.game_test.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;

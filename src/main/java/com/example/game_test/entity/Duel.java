@@ -1,4 +1,4 @@
-package com.example.game_test.enteties;
+package com.example.game_test.entity;
 
 import javax.persistence.*;
 

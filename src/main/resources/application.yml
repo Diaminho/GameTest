@@ -1,0 +1,25 @@
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+
+#DB Settings
+  datasource:
+    url: jdbc:h2:mem:gameDB
+    username: game
+    password: game
+    driver-class-name: org.h2.Driver
+
+# Enabling H2 Console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+

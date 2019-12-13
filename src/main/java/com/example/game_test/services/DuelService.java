@@ -1,8 +1,8 @@
 package com.example.game_test.services;
 
-import com.example.game_test.enteties.Duel;
-import com.example.game_test.enteties.ReadyUser;
-import com.example.game_test.enteties.User;
+import com.example.game_test.entity.Duel;
+import com.example.game_test.entity.ReadyUser;
+import com.example.game_test.entity.User;
 import com.example.game_test.repositories.DuelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,80 +12,27 @@ import java.util.List;
 
 @Service
 public class DuelService {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ReadyUserService readyUserService;
-    @Autowired
-    private SessionService sessionService;
-    @Autowired
-    private DuelRepository duelRepository;
+    private final UserService userService;
+    private final ReadyUserService readyUserService;
+    private final SessionService sessionService;
+    private final DuelRepository duelRepository;
 
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
+    public DuelService(UserService userService, ReadyUserService readyUserService, SessionService sessionService, DuelRepository duelRepository) {
         this.userService = userService;
-    }
-
-    public ReadyUserService getReadyUserService() {
-        return readyUserService;
-    }
-
-    public void setReadyUserService(ReadyUserService readyUserService) {
         this.readyUserService = readyUserService;
-    }
-
-    public SessionService getSessionService() {
-        return sessionService;
-    }
-
-    public void setSessionService(SessionService sessionService) {
         this.sessionService = sessionService;
-    }
-
-    public DuelRepository getDuelRepository() {
-        return duelRepository;
-    }
-
-    public void setDuelRepository(DuelRepository duelRepository) {
         this.duelRepository = duelRepository;
     }
 
     //searching opponent
-    public String searchOpponent(ModelMap modelMap, Long sessionId){
-        User user=sessionService.findUserBySessionId(sessionId);
-        Long userId=user.getId();
-
-        if (userId!=null) {
+    public String searchOpponent(ModelMap modelMap, Long sessionId) {
+        User user = sessionService.findUserBySessionId(sessionId);
+        Long userId = user.getId();
+        if (userId != null) {
             //add player to ready Users
             readyUserService.addPlayerToReady(userId);
-            List readyPlayers=readyUserService.findAll();
-            Long opponentId=null;
-            modelMap.put("userHp", user.getHp());
-            for (Object ru: readyPlayers){
-                if (((ReadyUser) ru).getUserId().compareTo(userId)!=0){
-                    opponentId=((ReadyUser) ru).getUserId();
-                    break;
-                }
-            }
-            if(opponentId!=null){
-                //deleting user and opponent from ready
-                readyUserService.deletePlayerFromReady(userId);
-                readyUserService.deletePlayerFromReady(opponentId);
-                User opponent=userService.findById(opponentId);
-                //creating duel
-                Duel duel=new Duel(userId, user.getHp(), opponentId, opponent.getHp());
-                duelRepository.save(duel);
-                //put info to model
-                modelMap.put("opponentLogin", opponent.getLogin());
-                modelMap.put("login", opponent.getLogin());
-                modelMap.put("opponentHp", opponent.getHp());
-                return "forward:/duel";
-            }
+            findOpponent(modelMap, user, 0);
         }
-        ////opponent not found
         modelMap.put("info", "Соперник не найден");
         modelMap.put("login", user.getLogin());
         modelMap.put("rating", user.getRating());
@@ -93,6 +40,47 @@ public class DuelService {
         ///
 
     }
+
+    private String findOpponent(ModelMap modelMap, User user, int timer) {
+        List<ReadyUser> readyPlayers = readyUserService.findAll();
+        Long userId = user.getId();
+        Long opponentId = null;
+        modelMap.put("userHp", user.getHp());
+        for (Object ru : readyPlayers) {
+            if (((ReadyUser) ru).getUserId().compareTo(userId) != 0) {
+                opponentId = ((ReadyUser) ru).getUserId();
+                break;
+            }
+        }
+        if(opponentId != null) {
+            //deleting user and opponent from ready
+            readyUserService.deletePlayerFromReady(userId);
+            readyUserService.deletePlayerFromReady(opponentId);
+            User opponent = userService.findById(opponentId);
+            //creating duel
+            Duel duel = new Duel(userId, user.getHp(), opponentId, opponent.getHp());
+            duelRepository.save(duel);
+            //put info to model
+            modelMap.put("opponentLogin", opponent.getLogin());
+            modelMap.put("login", opponent.getLogin());
+            modelMap.put("opponentHp", opponent.getHp());
+            return "forward:/duel";
+        }
+
+        ////opponent not found
+        //wait for opponent for 30 seconds
+        while (timer < 5) {
+            timer++;
+            try {
+                Thread.sleep(1000);
+                findOpponent(modelMap, user, timer);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return "failed";
+    }
+
 
 
     //battle

@@ -1,4 +1,4 @@
-package com.example.game_test.web;
+package com.example.game_test.controller;
 
 import com.example.game_test.services.AuthService;
 import com.example.game_test.services.SessionService;
@@ -11,12 +11,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes("sessionId")
 public class AuthController {
-    @Autowired
-    AuthService authService;
-    @Autowired
-    SessionService sessionService;
+    private final AuthService authService;
+    private final SessionService sessionService;
 
-    public AuthController() {
+    public AuthController(AuthService authService, SessionService sessionService) {
+        this.authService = authService;
+        this.sessionService = sessionService;
     }
 
     @ModelAttribute("sessionId")

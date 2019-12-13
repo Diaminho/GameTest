@@ -1,4 +1,4 @@
-package com.example.game_test.web;
+package com.example.game_test.controller;
 
 import com.example.game_test.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;

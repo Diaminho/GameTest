@@ -1,4 +1,4 @@
-package com.example.game_test.web;
+package com.example.game_test.controller;
 
 import com.example.game_test.services.DuelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class DuelController {
-    @Autowired
-    DuelService duelService;
+    private final DuelService duelService;
 
-    public DuelController() { }
+    public DuelController(DuelService duelService) {
+        this.duelService = duelService;
+    }
 
     @RequestMapping("/duel")
     public ModelAndView showDuel(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
