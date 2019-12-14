@@ -1,18 +1,14 @@
-<%@ page import="java.util.Date" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
-
 <!DOCTYPE html>
-<% Date start = new Date(); %>
-    <head>
+<head xmlns:th="http://www.w3.org/1999/xhtml">
         <title>Меню дуэлей</title>
-        <link rel="stylesheet" href="resources/css/main.css">
+        <link rel="stylesheet" th:href="@{/css/main.css}"/>
     </head>
-    <body>
+    <body xmlns:th="http://www.w3.org/1999/xhtml">
         <div class="wrapper">
             <div class="content">
-                <h1>Дуэли, ${login}</h1>
-                <p> Ваш рейтинг: ${rating} </p>
-                <p> ${info} </p>
+                <h1 th:text="'Дуэли, ' + ${login}" />
+                <p th:text="'Ваш рейтинг: ' + ${rating}" />
+                <p th:text="${info}" />
                 <p>
                     <form action="search" method="post">
                         <input type="submit" value="Поиск соперника">
@@ -27,8 +23,6 @@
             </div>
             <div class="footer">
                 <p>page:
-                    <% Date end = new Date(); %>
-                    <%= end.getTime() - start.getTime() %>ms
                 </p>
             </div>
         </div>

@@ -1,11 +1,8 @@
 spring:
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
+  thymeleaf:
+    cache: false
 
-
-#DB Settings
+  #DB Settings
   datasource:
     url: jdbc:h2:mem:gameDB
     username: game

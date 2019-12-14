@@ -1,14 +1,9 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
-<%@ page import="java.util.Date" %>
-
-
 <!DOCTYPE html>
-<% Date start = new Date(); %>
-<head>
+<head xmlns:th="http://www.w3.org/1999/xhtml">
     <title>Авторизация</title>
-    <link rel="stylesheet" href="resources/css/main.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
-<body>
+<body xmlns:th="http://www.w3.org/1999/xhtml">
 <div class="wrapper">
     <div class="content">
         <form action = "auth" method = "POST">
@@ -17,13 +12,10 @@
             <p>Введите пароль: <input type = "password" name = "password"/> </p>
             <p> <input type = "submit" value = "Ок" />
         </form>
-        <p>${info}</p>
+        <span th:text="${info}"/>
     </div>
     <div class="footer">
-        <p>page:
-            <% Date end = new Date(); %>
-            <%= end.getTime() - start.getTime() %>ms
-        </p>
+        <p th:text="'page: ' + ${time} + ' ms'" />
     </div>
 </div>
 </body>

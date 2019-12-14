@@ -31,7 +31,9 @@ public class DuelService {
         if (userId != null) {
             //add player to ready Users
             readyUserService.addPlayerToReady(userId);
-            findOpponent(modelMap, user, 0);
+            if (findOpponent(modelMap, user, 0)) {
+                return "forward:/duel";
+            }
         }
         modelMap.put("info", "Соперник не найден");
         modelMap.put("login", user.getLogin());
@@ -41,7 +43,7 @@ public class DuelService {
 
     }
 
-    private String findOpponent(ModelMap modelMap, User user, int timer) {
+    private boolean findOpponent(ModelMap modelMap, User user, int timer) {
         List<ReadyUser> readyPlayers = readyUserService.findAll();
         Long userId = user.getId();
         Long opponentId = null;
@@ -64,21 +66,10 @@ public class DuelService {
             modelMap.put("opponentLogin", opponent.getLogin());
             modelMap.put("login", opponent.getLogin());
             modelMap.put("opponentHp", opponent.getHp());
-            return "forward:/duel";
+            return true;
         }
-
         ////opponent not found
-        //wait for opponent for 30 seconds
-        while (timer < 5) {
-            timer++;
-            try {
-                Thread.sleep(1000);
-                findOpponent(modelMap, user, timer);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        return "failed";
+        return false;
     }
 
 

@@ -1,39 +1,32 @@
-<%@ page import="java.util.Date" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
-
 <!DOCTYPE html>
-<% Date start = new Date(); %>
-<head>
+<head xmlns:th="http://www.w3.org/1999/xhtml">
     <title>Дуэль</title>
-    <link rel="stylesheet" href="resources/css/main.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
-    <body>
+    <body xmlns:th="http://www.w3.org/1999/xhtml">
         <div class="wrapper">
             <div class="content">
-                <h1>Начинается дуэль, ${login}</h1>
-
+                <h1 th:text="'Начинается дуэль, ' + ${login}" />
                 <table align="center" cellspacing="5" cellpadding="5">
                     <tr>
-                        <td><p>Вы: ${login}</p></td>
-                        <td><p>Ваш оппонент: ${opponentLogin} </p></td>
+                        <td> <p th:text="'Вы: ' + ${login}" /> </td>
+                        <td> <p th:text="'Ваш оппонент: ' + ${opponentLogin}" /> </td>
                     </tr>
                     <tr>
-                        <td><p>Ваш показатель жизни: ${userHp}</p></td>
-                        <td><p>Показатель жизни соперника: ${opponentHp}</p></td>
+                        <td> <p th:text="'Ваш показатель жизни: ' + ${userHp}" /> </td>
+                        <td> <p th:text="'Показатель жизни соперника: ' + ${opponentHp}" /> </td>
                     </tr>
                     <tr>
                         <td>
-                            <progress max=${userHpBeforeDuel} value=${userHp}>
-                            </progress>
+                            <progress th:max=${userHpBeforeDuel} th:value=${userHp} />
                         </td>
                         <td>
-                            <progress max=${opponentHpBeforeDuel} value=${opponentHp}>
-                            </progress>
+                            <progress th:max=${opponentHpBeforeDuel} th:value=${opponentHp} />
                         </td>
                     </tr>
                 </table>
 
-                <p>${info}</p>
+                <p th:text="${info}"/>
 
                 <p>
                     <form action="attack" method="post">
@@ -48,8 +41,6 @@
             </div>
             <div class="footer">
                 <p>page:
-                    <% Date end = new Date(); %>
-                    <%= end.getTime() - start.getTime() %>ms
                 </p>
             </div>
         </div>
