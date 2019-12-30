@@ -1,7 +1,6 @@
 package com.example.game_test.controller;
 
-import com.example.game_test.services.DuelInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.game_test.service.DuelInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;

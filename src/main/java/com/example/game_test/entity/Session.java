@@ -3,14 +3,14 @@ package com.example.game_test.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="sessions")
+@Table(name = "sessions")
 public class Session {
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long userId;
 
     public Session() {

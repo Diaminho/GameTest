@@ -1,32 +1,19 @@
-package com.example.game_test.services;
+package com.example.game_test.service;
 
+import com.example.game_test.entity.Player;
 import com.example.game_test.entity.Session;
-import com.example.game_test.entity.User;
-import com.example.game_test.repositories.SessionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.game_test.repository.SessionRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SessionService {
-    @Autowired
-    private SessionRepository sessionRepository;
-    @Autowired
-    private UserService userService;
+    //TODO redo it to redis
+    private final SessionRepository sessionRepository;
+    private final PlayerService playerService;
 
-    public SessionRepository getSessionRepository() {
-        return sessionRepository;
-    }
-
-    public void setSessionRepository(SessionRepository sessionRepository) {
+    public SessionService(SessionRepository sessionRepository, PlayerService playerService) {
         this.sessionRepository = sessionRepository;
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+        this.playerService = playerService;
     }
 
     public Session findSessionById(Long id){
@@ -47,8 +34,8 @@ public class SessionService {
         sessionRepository.delete(sessionRepository.findSessionById(id));
     }
 
-    public User findUserBySessionId(Long sessionId){
-        return userService.findById(findSessionById(sessionId).getUserId());
+    public Player findUserBySessionId(Long sessionId){
+        return playerService.findById(findSessionById(sessionId).getUserId());
     }
 
     public Session findById(Long id){

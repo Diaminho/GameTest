@@ -3,23 +3,23 @@ package com.example.game_test.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="duels")
+@Table(name = "duels")
 public class Duel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name="first_player_id")
+    @Column(name = "first_player_id")
     private Long firstPlayerId;
 
-    @Column(name="first_player_hp")
+    @Column(name = "first_player_hp")
     private Long firstPlayerHp;
 
-    @Column(name="second_player_id")
+    @Column(name = "second_player_id")
     private Long secondPlayerId;
-    
-    @Column(name="second_player_hp")
+
+    @Column(name = "second_player_hp")
     private Long secondPlayerHp;
 
     public Duel(Long firstPlayerId, Long firstPlayerHp, Long secondPlayerId, Long secondPlayerHp) {

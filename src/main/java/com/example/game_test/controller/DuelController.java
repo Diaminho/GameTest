@@ -1,7 +1,6 @@
 package com.example.game_test.controller;
 
-import com.example.game_test.services.DuelService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.game_test.service.DuelService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +23,11 @@ public class DuelController {
     @RequestMapping("/search")
     public ModelAndView searchOpponent(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
         return new ModelAndView(duelService.searchOpponent(modelMap, sessionId), modelMap);
+    }
+
+    @RequestMapping("/retrySearch")
+    public ModelAndView retrySearchOpponent(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
+        return new ModelAndView(duelService.retrySearch(modelMap, sessionId), modelMap);
     }
 
     @RequestMapping("/attack")

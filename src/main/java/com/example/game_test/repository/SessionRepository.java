@@ -1,4 +1,4 @@
-package com.example.game_test.repositories;
+package com.example.game_test.repository;
 
 import com.example.game_test.entity.Session;
 import org.springframework.data.repository.CrudRepository;

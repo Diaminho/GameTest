@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head xmlns:th="http://www.w3.org/1999/xhtml">
         <title>Меню дуэлей</title>
         <link rel="stylesheet" th:href="@{/css/main.css}"/>
@@ -6,20 +7,21 @@
     <body xmlns:th="http://www.w3.org/1999/xhtml">
         <div class="wrapper">
             <div class="content">
-                <h1 th:text="'Дуэли, ' + ${login}" />
-                <p th:text="'Ваш рейтинг: ' + ${rating}" />
+                <h1 th:text="'Дуэли, ' + ${player.login}" />
+                <p th:text="'Ваш рейтинг: ' + ${player.rating}" />
                 <p th:text="${info}" />
-                <p>
-                    <form action="search" method="post">
-                        <input type="submit" value="Поиск соперника">
-                    </form>
-                </p>
+                <p th:text="${player}" />
+                    <p>
+                        <form action="search" method="post">
+                            <input type="submit" value="Поиск соперника">
+                        </form>
+                    </p>
                 <p>
                     <form action="quit" method="post">
                         <input type="submit" value="Выйти">
                     </form>
                 </p>
-
+                <p th:text="'Поиск: ' + ${isLoading}" />
             </div>
             <div class="footer">
                 <p>page:

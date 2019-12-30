@@ -1,7 +1,6 @@
 package com.example.game_test.controller;
 
-import com.example.game_test.services.MenuService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.game_test.service.MenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MenuController {
-    @Autowired
-    MenuService menuService;
+    final MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     @RequestMapping("/menu")
     public ModelAndView showRating(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){

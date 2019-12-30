@@ -4,36 +4,37 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name="users")
-public class User {
+@Table(name = "players")
+public class Player {
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="login")
+    @Column(name = "login")
     private String login;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name="hp")
+    @Column(name = "hp")
     private Long hp;
 
-    @Column(name="attack")
+    @Column(name = "attack")
     private Long attack;
 
-    @Column(name="rating")
+    @Column(name = "rating")
     private Long rating;
 
-    public User() {}
+    public Player() {
+    }
 
-    public User(String login, String password) {
+    public Player(String login, String password) {
         this.login = login;
         this.password = password;
     }
 
-    public User(String login, String password, Long hp, Long attack, Long rating) {
+    public Player(String login, String password, Long hp, Long attack, Long rating) {
         this.login = login;
         this.password = password;
         this.hp = hp;
@@ -93,13 +94,13 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(login, user.login) &&
-                password.compareTo(user.password)==0 &&
-                hp.compareTo(user.hp)==0 &&
-                attack.compareTo(user.attack)==0 &&
-                rating.compareTo(user.rating)==0;
+        Player player = (Player) o;
+        return Objects.equals(id, player.id) &&
+                Objects.equals(login, player.login) &&
+                password.compareTo(player.password) == 0 &&
+                hp.compareTo(player.hp) == 0 &&
+                attack.compareTo(player.attack) == 0 &&
+                rating.compareTo(player.rating) == 0;
     }
 
     @Override
@@ -122,7 +123,7 @@ public class User {
         public Builder(String login, String password) {
             this.login = login;
             this.password = password;
-            this.id=id;
+            this.id = id;
         }
 
         public Builder hp(Long val) {
@@ -140,12 +141,12 @@ public class User {
             return this;
         }
 
-        public User build() {
-            return new User(this);
+        public Player build() {
+            return new Player(this);
         }
     }
 
-    private User(Builder builder) {
+    private Player(Builder builder) {
         login = builder.login;
         password = builder.password;
         hp = builder.hp;
