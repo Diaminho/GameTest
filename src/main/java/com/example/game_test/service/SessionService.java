@@ -35,7 +35,7 @@ public class SessionService {
     }
 
     public Player findUserBySessionId(Long sessionId){
-        return playerService.findById(findSessionById(sessionId).getUserId());
+        return playerService.findById(sessionRepository.findSessionById(sessionId).getUserId());
     }
 
     public Session findById(Long id){

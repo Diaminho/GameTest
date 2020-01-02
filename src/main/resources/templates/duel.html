@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head xmlns:th="http://www.w3.org/1999/xhtml">
+    <script src="scripts/playerScripts.js"></script>
     <title>Дуэль</title>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
@@ -13,12 +14,12 @@
                         <td> <p th:text="'Ваш оппонент: ' + ${opponent.login}" /> </td>
                     </tr>
                     <tr>
-                        <td> <p th:text="'Ваш показатель жизни: ' + ${user.hp}" /> </td>
+                        <td> <p th:text="'Ваш показатель жизни: ' + ${player.hp}" /> </td>
                         <td> <p th:text="'Показатель жизни соперника: ' + ${opponent.hp}" /> </td>
                     </tr>
                     <tr>
                         <td>
-                            <progress th:max=${userHpBeforeDuel} th:value=${user.hp} />
+                            <progress th:max=${playerHpBeforeDuel} th:value=${player.hp} />
                         </td>
                         <td>
                             <progress th:max=${opponentHpBeforeDuel} th:value=${opponent.hp} />
@@ -27,6 +28,11 @@
                 </table>
 
                 <p th:text="${info}"/>
+
+                <script type="text/javascript">
+                    console.log("${isLoading}");
+                    setInterval(() => updateDuelStatus("1111"), 1000);
+                </script>
 
                 <p>
                     <form action="attack" method="post">

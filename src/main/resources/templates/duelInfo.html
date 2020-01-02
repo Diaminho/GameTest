@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <head xmlns:th="http://www.w3.org/1999/xhtml">
+    <script src="scripts/playerScripts.js"></script>
         <title>Меню дуэлей</title>
         <link rel="stylesheet" th:href="@{/css/main.css}"/>
     </head>
@@ -10,18 +11,31 @@
                 <h1 th:text="'Дуэли, ' + ${player.login}" />
                 <p th:text="'Ваш рейтинг: ' + ${player.rating}" />
                 <p th:text="${info}" />
-                <p th:text="${player}" />
-                    <p>
-                        <form action="search" method="post">
-                            <input type="submit" value="Поиск соперника">
-                        </form>
+                <div th:switch="${isLoading}">
+                    <p th:case="true">
+                            <script type="text/javascript">
+                                console.log("${isLoading}");
+                                setInterval(() => updateSearchStatus("1111"), 1000);
+                            </script>
                     </p>
+                    <p th:case="false">
+                        <script type="text/javascript">
+                            window.location.replace("/duel");
+                        </script>
+                    </p>
+                </div>
+                <p th:if="!${isLoading}">
+                    <form action="search" method="post">
+                        <input type="submit" value="Поиск соперника">
+                    </form>
+                </p>
                 <p>
                     <form action="quit" method="post">
                         <input type="submit" value="Выйти">
                     </form>
                 </p>
                 <p th:text="'Поиск: ' + ${isLoading}" />
+
             </div>
             <div class="footer">
                 <p>page:

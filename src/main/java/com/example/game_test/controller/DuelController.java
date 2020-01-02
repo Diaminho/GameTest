@@ -25,13 +25,20 @@ public class DuelController {
         return new ModelAndView(duelService.searchOpponent(modelMap, sessionId), modelMap);
     }
 
-    @RequestMapping("/retrySearch")
-    public ModelAndView retrySearchOpponent(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
-        return new ModelAndView(duelService.retrySearch(modelMap, sessionId), modelMap);
+    @RequestMapping("/updateSearchStatus")
+    public ModelAndView updateSearchStatus(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId) {
+        String result = duelService.updateSearchStatus(modelMap, sessionId);
+        return new ModelAndView(result, modelMap);
     }
 
     @RequestMapping("/attack")
-    public ModelAndView doDuel(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId){
-        return new ModelAndView(duelService.getFight(modelMap, sessionId), modelMap);
+    public ModelAndView doDuel(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId) {
+        return new ModelAndView(duelService.attack(modelMap, sessionId), modelMap);
+    }
+
+    @RequestMapping("/updateDuelStatus")
+    public ModelAndView updateDuelStatus(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId) {
+        //TODO fix updateDuelStatus
+        return new ModelAndView(duelService.getFightInfo(modelMap, sessionId), modelMap);
     }
 }

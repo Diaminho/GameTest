@@ -17,7 +17,7 @@ public class DuelInfoService {
         if (sessionId > 0) {
             Player player = sessionService.findUserBySessionId(sessionId);
             if (player != null) {
-                modelMap.put("player", PlayerUtils.convertPlayerToDAO(player));
+                modelMap.put("player", PlayerUtils.convertPlayerToDTO(player));
                 modelMap.put("sessionId", sessionId);
                 return "duelInfo";
             }

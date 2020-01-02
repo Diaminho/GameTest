@@ -1,5 +1,6 @@
 package com.example.game_test.service;
 
+import com.example.game_test.dto.PlayerDTO;
 import com.example.game_test.entity.Duel;
 import com.example.game_test.entity.Player;
 import com.example.game_test.entity.ReadyPlayer;
@@ -8,6 +9,7 @@ import com.example.game_test.util.PlayerUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -41,16 +43,16 @@ public class DuelService {
         modelMap.put("login", player.getLogin());
         modelMap.put("rating", player.getRating());
         return "duelInfo";
-        ///
     }
 
-    public String retrySearch (ModelMap modelMap, Long sessionId) {
+    public String updateSearchStatus(ModelMap modelMap, Long sessionId) {
+        System.out.println("sessionId: " + sessionId);
         Player player = sessionService.findUserBySessionId(sessionId);
         Long userId = player.getId();
         if (userId != null) {
             if (findOpponent(modelMap, player)) {
-                //return "forward:/duel";
-                modelMap.put("isLoading", false);
+                return "forward:/duel";
+                //modelMap.put("isLoading", false);
             } else {
                 modelMap.put("isLoading", true);
             }
@@ -63,38 +65,33 @@ public class DuelService {
     private boolean findOpponent(ModelMap modelMap, Player player) {
         List<ReadyPlayer> readyPlayers = readyPlayerService.findAll();
         Long userId = player.getId();
-        modelMap.put("player", PlayerUtils.convertPlayerToDAO(player));
+        modelMap.put("player", PlayerUtils.convertPlayerToDTO(player));
         ReadyPlayer foundOpponent = readyPlayers.stream().filter(readyPlayer -> readyPlayer.getUserId().compareTo(player.getId()) != 0).findFirst().orElse(null);
         if (foundOpponent != null) {
             //deleting user and opponent from ready
             //readyPlayerService.deletePlayerFromReady(userId);
-            //readyPlayerService.deletePlayerFromReady(opponentId);
             Long opponentId = foundOpponent.getUserId();
+            //readyPlayerService.deletePlayerFromReady(opponentId);
             Player opponent = playerService.findById(opponentId);
-            //creating duel
-            Duel duel = new Duel(userId, player.getHp(), opponentId, opponent.getHp());
-            duelRepository.save(duel);
+            //creating duel if it doesn't exist
+            if (duelRepository.findByFirstPlayerId(player.getId()) == null && duelRepository.findBySecondPlayerId(player.getId()) == null) {
+                Duel duel = new Duel(userId, player.getHp(), opponentId, opponent.getHp());
+                duelRepository.save(duel);
+            }
             //put info to model
-            modelMap.put("opponent", PlayerUtils.convertPlayerToDAO(opponent));
+            modelMap.put("opponent", PlayerUtils.convertPlayerToDTO(opponent));
             return true;
         }
         ////opponent not found
         return false;
     }
 
-    public String updateSearchInfo(ModelMap modelMap, Long sessionId) {
-        Player player = sessionService.findUserBySessionId(sessionId);
-        return "test";
-    }
-
-
     //battle
-    public String getFight(ModelMap modelMap, Long sessionId) {
+    public String attack(ModelMap modelMap, Long sessionId) {
         if (sessionId > 0) {
-            Long duelId = getDuelIdFromSessionId(sessionId);
             //finding players from duelId
-            String res = doAttack(modelMap, duelId);
-            putInfoToModel(modelMap, duelId);
+            String res = doAttack(modelMap, sessionId);
+            putInfoToModel(modelMap, sessionId);
             return res;
         }
         return "redirect:/quit";
@@ -103,20 +100,20 @@ public class DuelService {
     //battle info
     public String getFightInfo(ModelMap modelMap, Long sessionId) {
         if (sessionId > 0) {
-            Long duelId = getDuelIdFromSessionId(sessionId);
-            putInfoToModel(modelMap, duelId);
+            putInfoToModel(modelMap, sessionId);
             return "duel";
         }
         return "redirect:/quit";
     }
 
     //do attack and save result to duel table
-    private String doAttack(ModelMap modelMap, Long duelId) {
-        Duel duel = duelRepository.getById(duelId);
-        Long opponentHp = duelRepository.getById(duelId).getSecondPlayerHp();
-        Player player = getFirstPlayerByDuelId(duelId);
-        Player opponent = getSecondPlayerByDuelId(duelId);
-        if (opponentHp < player.getAttack()) {
+    private String doAttack(ModelMap modelMap, Long sessionId) {
+        Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
+        //TODO check Status of Duel
+        List<Player> players = getPlayerAndOpponentFromDuel(sessionId, duel);
+        Player player =  players.get(0);
+        Player opponent =  players.get(1);
+        if (getDuelingPlayerHp(opponent.getId(), duel) < player.getAttack()) {
             modelMap.put("info", "Конец дуэли");
             ///change stats
             //winner
@@ -130,12 +127,11 @@ public class DuelService {
             opponent.setHp(opponent.getHp() + 10);
             opponent.setRating(opponent.getRating() - 1);
             playerService.updateUser(opponent);
-            //duelRepository.delete(duel);
-            //NEED TO DELETE DUEL
             return "redirect:/duelInfo";
         } else {
-            duel.setSecondPlayerHp(duel.getSecondPlayerHp() - player.getAttack());
-            duelRepository.save(duel);
+            //TODO fix hp changing
+            changeOpponentHp(player, duel);
+            putInfoToModel(modelMap, sessionId);
             modelMap.put("info", player.getLogin() + " атаковал " + opponent.getLogin() + " на " + player.getAttack() + " урона.");
         }
         return "duel";
@@ -144,8 +140,9 @@ public class DuelService {
     //get duel_id from session_id
     public Long getDuelIdFromSessionId(Long sessionId) {
         Player player = sessionService.findUserBySessionId(sessionId);
-        Duel duel = duelRepository.findByFirstPlayerId(player.getId());
-        return duel.getId();
+        Duel foundDuel = duelRepository.findByFirstPlayerId(player.getId());
+        foundDuel = (foundDuel == null) ? duelRepository.findBySecondPlayerId(player.getId()): foundDuel;
+        return foundDuel.getId();
     }
 
     //find firstPlayer by duelId
@@ -159,19 +156,40 @@ public class DuelService {
     }
 
 
-    private void putInfoToModel(ModelMap modelMap, Long duelId) {
-        Duel duel = duelRepository.getById(duelId);
-        Player player = getFirstPlayerByDuelId(duelId);
-        Player opponent = getSecondPlayerByDuelId(duelId);
+    private void putInfoToModel(ModelMap modelMap, Long sessionId) {
+        Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
+        List<Player> players = getPlayerAndOpponentFromDuel(sessionId, duel);
         //user info
-        //TODO fix temporal change for players hp
-        modelMap.put("login", player.getLogin());
-        modelMap.put("userHp", duel.getFirstPlayerHp());
-        modelMap.put("userHpBeforeDuel", player.getHp());
+        PlayerDTO player = PlayerUtils.convertPlayerToDTO(players.get(0));
+        modelMap.put("playerHpBeforeDuel", player.getHp());
+        player.setHp(getDuelingPlayerHp(player.getId(), duel));
+        modelMap.put("player", player);
         //opponent info
-        modelMap.put("opponentLogin", opponent.getLogin());
-        modelMap.put("opponentHp", duel.getSecondPlayerHp());
+        PlayerDTO opponent = PlayerUtils.convertPlayerToDTO(players.get(1));
         modelMap.put("opponentHpBeforeDuel", opponent.getHp());
+        opponent.setHp(getDuelingPlayerHp(opponent.getId(), duel));
+        modelMap.put("opponent", opponent);
+    }
+
+    private List<Player> getPlayerAndOpponentFromDuel(Long sessionId, Duel duel) {
+        Player player = sessionService.findUserBySessionId(sessionId);
+        Long opponentId = duel.getFirstPlayerId();
+        opponentId = (opponentId.compareTo(player.getId()) == 0) ? duel.getSecondPlayerId(): opponentId;
+        Player opponent =  playerService.findById(opponentId);
+        return Arrays.asList(player, opponent);
+    }
+
+    private Long getDuelingPlayerHp(Long playerId, Duel duel) {
+        return  (duel.getFirstPlayerId().compareTo(playerId) == 0) ? duel.getFirstPlayerHp(): duel.getSecondPlayerHp();
+    }
+
+    private void changeOpponentHp(Player player, Duel duel) {
+        if (duel.getFirstPlayerId().compareTo(player.getId()) != 0) {
+            duel.setFirstPlayerHp(duel.getFirstPlayerHp() - player.getAttack());
+        } else {
+            duel.setSecondPlayerHp(duel.getSecondPlayerHp() - player.getAttack());
+        }
+        duelRepository.save(duel);
     }
 
 }

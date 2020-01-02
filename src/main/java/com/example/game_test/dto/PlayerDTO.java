@@ -1,13 +1,13 @@
-package com.example.game_test.dao;
+package com.example.game_test.dto;
 
-public class PlayerDao {
+public class PlayerDTO {
     private Long id;
     private String login;
     private Long hp;
     private Long attack;
     private Long rating;
 
-    public PlayerDao(Long id, String login, Long hp, Long attack, Long rating) {
+    public PlayerDTO(Long id, String login, Long hp, Long attack, Long rating) {
         this.id = id;
         this.login = login;
         this.hp = hp;
