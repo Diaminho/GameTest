@@ -22,11 +22,16 @@ public class Duel {
     @Column(name = "second_player_hp")
     private Long secondPlayerHp;
 
-    public Duel(Long firstPlayerId, Long firstPlayerHp, Long secondPlayerId, Long secondPlayerHp) {
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public Duel(Long firstPlayerId, Long firstPlayerHp, Long secondPlayerId, Long secondPlayerHp, Status status) {
         this.firstPlayerId = firstPlayerId;
         this.firstPlayerHp = firstPlayerHp;
         this.secondPlayerId = secondPlayerId;
         this.secondPlayerHp = secondPlayerHp;
+        this.status = status;
     }
 
     public Duel() {
@@ -70,5 +75,18 @@ public class Duel {
 
     public void setSecondPlayerHp(Long secondPlayerHp) {
         this.secondPlayerHp = secondPlayerHp;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public enum Status {
+        IN_PROGRESS,
+        FINISHED
     }
 }

@@ -75,7 +75,7 @@ public class DuelService {
             Player opponent = playerService.findById(opponentId);
             //creating duel if it doesn't exist
             if (duelRepository.findByFirstPlayerId(player.getId()) == null && duelRepository.findBySecondPlayerId(player.getId()) == null) {
-                Duel duel = new Duel(userId, player.getHp(), opponentId, opponent.getHp());
+                Duel duel = new Duel(userId, player.getHp(), opponentId, opponent.getHp(), Duel.Status.IN_PROGRESS);
                 duelRepository.save(duel);
             }
             //put info to model
@@ -100,6 +100,14 @@ public class DuelService {
     //battle info
     public String getFightInfo(ModelMap modelMap, Long sessionId) {
         if (sessionId > 0) {
+            Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
+            if (checkIfDuelIsFinished(duel)) {
+                return "redirect:/menu";
+            }
+            if (arePlayersHaveNotHp(duel)) {
+                duel.setStatus(Duel.Status.FINISHED);
+                return "redirect:/menu";
+            }
             putInfoToModel(modelMap, sessionId);
             return "duel";
         }
@@ -110,31 +118,32 @@ public class DuelService {
     private String doAttack(ModelMap modelMap, Long sessionId) {
         Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
         //TODO check Status of Duel
+        if (checkIfDuelIsFinished(duel)) {
+            return "redirect:/menu";
+        }
         List<Player> players = getPlayerAndOpponentFromDuel(sessionId, duel);
         Player player =  players.get(0);
         Player opponent =  players.get(1);
         if (getDuelingPlayerHp(opponent.getId(), duel) < player.getAttack()) {
+            duel.setStatus(Duel.Status.FINISHED);
+            duelRepository.save(duel);
             modelMap.put("info", "Конец дуэли");
-            ///change stats
-            //winner
-            player.setAttack(player.getAttack() + 1);
-            player.setHp(player.getHp() + 10);
-            player.setRating(player.getRating() + 1);
-            playerService.updateUser(player);
-            //
-            //loser
-            opponent.setAttack(opponent.getAttack() + 1);
-            opponent.setHp(opponent.getHp() + 10);
-            opponent.setRating(opponent.getRating() - 1);
-            playerService.updateUser(opponent);
+            changePlayersStats(player, opponent);
             return "redirect:/duelInfo";
         } else {
-            //TODO fix hp changing
             changeOpponentHp(player, duel);
+            if (getDuelingPlayerHp(opponent.getId(), duel) < player.getAttack()) {
+                duel.setStatus(Duel.Status.FINISHED);
+                duelRepository.save(duel);
+                modelMap.put("info", "Конец дуэли");
+                changePlayersStats(player, opponent);
+                return "redirect:/duelInfo";
+            }
             putInfoToModel(modelMap, sessionId);
             modelMap.put("info", player.getLogin() + " атаковал " + opponent.getLogin() + " на " + player.getAttack() + " урона.");
+
         }
-        return "duel";
+        return "redirect:/duel";
     }
 
     //get duel_id from session_id
@@ -144,17 +153,6 @@ public class DuelService {
         foundDuel = (foundDuel == null) ? duelRepository.findBySecondPlayerId(player.getId()): foundDuel;
         return foundDuel.getId();
     }
-
-    //find firstPlayer by duelId
-    public Player getFirstPlayerByDuelId(Long duelId) {
-        return playerService.findById(duelRepository.getById(duelId).getFirstPlayerId());
-    }
-
-    //find firstPlayer by duelId
-    public Player getSecondPlayerByDuelId(Long duelId) {
-        return playerService.findById(duelRepository.getById(duelId).getSecondPlayerId());
-    }
-
 
     private void putInfoToModel(ModelMap modelMap, Long sessionId) {
         Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
@@ -190,6 +188,29 @@ public class DuelService {
             duel.setSecondPlayerHp(duel.getSecondPlayerHp() - player.getAttack());
         }
         duelRepository.save(duel);
+    }
+
+    private boolean checkIfDuelIsFinished(Duel duel) {
+        return duel.getStatus().compareTo(Duel.Status.FINISHED) == 0;
+    }
+
+    private boolean arePlayersHaveNotHp(Duel duel) {
+        return duel.getFirstPlayerHp().compareTo(0L) <= 0 || duel.getSecondPlayerHp().compareTo(0L) <= 0;
+    }
+
+    private void changePlayersStats(Player winner, Player loser) {
+        ///change stats
+        //winner
+        winner.setAttack(winner.getAttack() + 1);
+        winner.setHp(winner.getHp() + 10);
+        winner.setRating(winner.getRating() + 1);
+        playerService.updateUser(winner);
+        //
+        //loser
+        loser.setAttack(loser.getAttack() + 1);
+        loser.setHp(loser.getHp() + 10);
+        loser.setRating(loser.getRating() - 1);
+        playerService.updateUser(loser);
     }
 
 }

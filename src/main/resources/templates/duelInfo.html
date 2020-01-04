@@ -20,7 +20,13 @@
                     </p>
                     <p th:case="false">
                         <script type="text/javascript">
-                            window.location.replace("/duel");
+                            const sleep = (milliseconds) => {
+                                return new Promise(resolve => setTimeout(resolve, milliseconds))
+                            }
+                            sleep(5000).then(() => {
+                                
+                                window.location.replace("/duel");
+                            })
                         </script>
                     </p>
                 </div>
