@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<script type="text/javascript">
+    let startTime = new Date().getTime();
+</script>
 <head xmlns:th="http://www.w3.org/1999/xhtml">
     <script src="scripts/playerScripts.js"></script>
     <title>Дуэль</title>
@@ -26,9 +29,6 @@
                         </td>
                     </tr>
                 </table>
-
-                <p th:text="${info}"/>
-
                 <script type="text/javascript">
                     console.log("${isLoading}");
                     setInterval(() => updateDuelStatus("1111"), 1000);
@@ -46,8 +46,12 @@
                 </p>
             </div>
             <div class="footer">
-                <p>page:
-                </p>
+                <p th:text="${info}"/>
+                <p id="generationTime"></p>
+                <script type="text/javascript">
+                    let elapsedTime = new Date().getTime() - startTime;
+                    document.getElementById("generationTime").innerHTML = "page: " + elapsedTime + " ms";
+                </script>
             </div>
         </div>
     </body>

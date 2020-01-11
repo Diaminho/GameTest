@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-
+<script type="text/javascript">
+    let startTime = new Date().getTime();
+</script>
 <head xmlns:th="http://www.w3.org/1999/xhtml">
     <script src="scripts/playerScripts.js"></script>
         <title>Меню дуэлей</title>
@@ -20,17 +22,13 @@
                     </p>
                     <p th:case="false">
                         <script type="text/javascript">
-                            const sleep = (milliseconds) => {
-                                return new Promise(resolve => setTimeout(resolve, milliseconds))
-                            }
-                            sleep(5000).then(() => {
-                                
-                                window.location.replace("/duel");
-                            })
+                            let countDownDate = new Date().getTime() + 60 * 1000;
+                            setInterval(() => countdownTimer(countDownDate), 1000);
                         </script>
+                        <p id="timer"></p>
                     </p>
                 </div>
-                <p th:if="!${isLoading}">
+                <p>
                     <form action="search" method="post">
                         <input type="submit" value="Поиск соперника">
                     </form>
@@ -40,12 +38,14 @@
                         <input type="submit" value="Выйти">
                     </form>
                 </p>
-                <p th:text="'Поиск: ' + ${isLoading}" />
 
             </div>
             <div class="footer">
-                <p>page:
-                </p>
+                <p id="generationTime"></p>
+                <script type="text/javascript">
+                    let elapsedTime = new Date().getTime() - startTime;
+                    document.getElementById("generationTime").innerHTML = "page: " + elapsedTime + " ms";
+                </script>
             </div>
         </div>
     </body>

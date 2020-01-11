@@ -117,7 +117,6 @@ public class DuelService {
     //do attack and save result to duel table
     private String doAttack(ModelMap modelMap, Long sessionId) {
         Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
-        //TODO check Status of Duel
         if (checkIfDuelIsFinished(duel)) {
             return "redirect:/menu";
         }
@@ -140,7 +139,15 @@ public class DuelService {
                 return "redirect:/duelInfo";
             }
             putInfoToModel(modelMap, sessionId);
-            modelMap.put("info", player.getLogin() + " атаковал " + opponent.getLogin() + " на " + player.getAttack() + " урона.");
+            //TODO Fix log storage
+            String log = player.getLogin() + " атаковал " + opponent.getLogin() + " на " + player.getAttack() + " урона.\n\t";
+            if (duel.getLog() != null) {
+                duel.setLog(duel.getLog() + log);
+            } else {
+                duel.setLog(log);
+            }
+            duelRepository.save(duel);
+            modelMap.put("info", log);
 
         }
         return "redirect:/duel";
@@ -167,6 +174,7 @@ public class DuelService {
         modelMap.put("opponentHpBeforeDuel", opponent.getHp());
         opponent.setHp(getDuelingPlayerHp(opponent.getId(), duel));
         modelMap.put("opponent", opponent);
+        modelMap.put("info", duel.getLog());
     }
 
     private List<Player> getPlayerAndOpponentFromDuel(Long sessionId, Duel duel) {

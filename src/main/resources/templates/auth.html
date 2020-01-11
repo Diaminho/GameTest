@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<script type="text/javascript">
+    let startTime = new Date().getTime();
+</script>
 <head xmlns:th="http://www.w3.org/1999/xhtml">
     <title>Авторизация</title>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
@@ -15,8 +18,13 @@
         <span th:text="${info}"/>
     </div>
     <div class="footer">
-        <p th:text="'page: ' + ${time} + ' ms'" />
+        <p id="generationTime"></p>
+        <script type="text/javascript">
+            let elapsedTime = new Date().getTime() - startTime;
+            document.getElementById("generationTime").innerHTML = "page: " + elapsedTime + " ms";
+        </script>
     </div>
 </div>
 </body>
+
 </html>

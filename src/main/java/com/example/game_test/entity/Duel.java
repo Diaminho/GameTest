@@ -26,6 +26,9 @@ public class Duel {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "log")
+    private String log;
+
     public Duel(Long firstPlayerId, Long firstPlayerHp, Long secondPlayerId, Long secondPlayerHp, Status status) {
         this.firstPlayerId = firstPlayerId;
         this.firstPlayerHp = firstPlayerHp;
@@ -83,6 +86,14 @@ public class Duel {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 
     public enum Status {

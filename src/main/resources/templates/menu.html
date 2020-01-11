@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<script type="text/javascript">
+    let startTime = new Date().getTime();
+</script>
 <head xmlns:th="http://www.w3.org/1999/xhtml">
     <title>Главное меню</title>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
@@ -20,8 +23,11 @@
                     </p>
             </div>
             <div class="footer">
-                <p>page:
-                </p>
+                <p id="generationTime"></p>
+                <script type="text/javascript">
+                    let elapsedTime = new Date().getTime() - startTime;
+                    document.getElementById("generationTime").innerHTML = "page: " + elapsedTime + " ms";
+                </script>
             </div>
         </div>
     </body>
