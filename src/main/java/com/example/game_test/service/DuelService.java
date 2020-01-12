@@ -155,7 +155,7 @@ public class DuelService {
             }
             putInfoToModel(modelMap, sessionId);
             //TODO Fix log storage
-            String log = player.getLogin() + " атаковал " + opponent.getLogin() + " на " + player.getAttack() + " урона.\n\t";
+            String log = player.getLogin() + " атаковал " + opponent.getLogin() + " на " + player.getAttack() + " урона.\n";
             if (duel.getLog() != null) {
                 duel.setLog(duel.getLog() + log);
             } else {
