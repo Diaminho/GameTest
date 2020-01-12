@@ -75,7 +75,7 @@ public class DuelService {
             Player opponent = playerService.findById(opponentId);
             //creating duel if it doesn't exist
             if (duelRepository.findByFirstPlayerId(player.getId()) == null && duelRepository.findBySecondPlayerId(player.getId()) == null) {
-                Duel duel = new Duel(userId, player.getHp(), opponentId, opponent.getHp(), Duel.Status.IN_PROGRESS);
+                Duel duel = new Duel(userId, player.getHp(), opponentId, opponent.getHp(), Duel.Status.INITIATED);
                 duelRepository.save(duel);
             }
             //put info to model
@@ -113,6 +113,21 @@ public class DuelService {
         }
         return "redirect:/quit";
     }
+
+
+    //battle info
+    public String setDuelInProgress(ModelMap modelMap, Long sessionId) {
+        if (sessionId > 0) {
+            Duel duel = duelRepository.getById(getDuelIdFromSessionId(sessionId));
+            if (duel.getStatus().compareTo(Duel.Status.INITIATED) == 0) {
+                duel.setStatus(Duel.Status.IN_PROGRESS);
+                duelRepository.save(duel);
+            }
+            return getFightInfo(modelMap, sessionId);
+        }
+        return "redirect:/quit";
+    }
+
 
     //do attack and save result to duel table
     private String doAttack(ModelMap modelMap, Long sessionId) {
@@ -174,6 +189,7 @@ public class DuelService {
         modelMap.put("opponentHpBeforeDuel", opponent.getHp());
         opponent.setHp(getDuelingPlayerHp(opponent.getId(), duel));
         modelMap.put("opponent", opponent);
+        modelMap.put("status", duel.getStatus().name());
         modelMap.put("info", duel.getLog());
     }
 

@@ -26,7 +26,7 @@ public class Duel {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "log")
+    @Column(name = "log", columnDefinition = "text")
     private String log;
 
     public Duel(Long firstPlayerId, Long firstPlayerHp, Long secondPlayerId, Long secondPlayerHp, Status status) {
@@ -97,6 +97,7 @@ public class Duel {
     }
 
     public enum Status {
+        INITIATED,
         IN_PROGRESS,
         FINISHED
     }

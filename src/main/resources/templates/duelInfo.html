@@ -14,30 +14,27 @@
                 <p th:text="'Ваш рейтинг: ' + ${player.rating}" />
                 <p th:text="${info}" />
                 <div th:switch="${isLoading}">
-                    <p th:case="true">
+                    <div th:case="true">
                             <script type="text/javascript">
                                 console.log("${isLoading}");
                                 setInterval(() => updateSearchStatus("1111"), 1000);
                             </script>
-                    </p>
+                        <p>Идет поиск соперника</p>
+                    </div>
                     <p th:case="false">
                         <script type="text/javascript">
-                            let countDownDate = new Date().getTime() + 60 * 1000;
-                            setInterval(() => countdownTimer(countDownDate), 1000);
+                            window.location.replace("/duel");
                         </script>
-                        <p id="timer"></p>
                     </p>
+                    <div th:case="*">
+                        <form action="search" method="post">
+                            <input type="submit" value="Поиск соперника">
+                        </form>
+                        <form action="quit" method="post">
+                            <input type="submit" value="Выйти">
+                        </form>
+                    </div>
                 </div>
-                <p>
-                    <form action="search" method="post">
-                        <input type="submit" value="Поиск соперника">
-                    </form>
-                </p>
-                <p>
-                    <form action="quit" method="post">
-                        <input type="submit" value="Выйти">
-                    </form>
-                </p>
 
             </div>
             <div class="footer">

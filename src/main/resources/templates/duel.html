@@ -11,6 +11,7 @@
         <div class="wrapper">
             <div class="content">
                 <h1 th:text="'Начинается дуэль, ' + ${player.login}" />
+                <p id="timer"></p>
                 <table align="center" cellspacing="5" cellpadding="5">
                     <tr>
                         <td> <p th:text="'Вы: ' + ${player.login}" /> </td>
@@ -29,21 +30,27 @@
                         </td>
                     </tr>
                 </table>
-                <script type="text/javascript">
-                    console.log("${isLoading}");
-                    setInterval(() => updateDuelStatus("1111"), 1000);
-                </script>
-
-                <p>
-                    <form action="attack" method="post">
-                        <input type="submit" value="Атака">
-                    </form>
-                </p>
-                <p>
-                    <form action="menu" method="post">
-                        <input type="submit" value="Выйти">
-                    </form>
-                </p>
+                <div th:switch="${status}">
+                    <div th:case="INITIATED">
+                        <script type="text/javascript">
+                            let countDownDate = new Date().getTime() + 60 * 1000;
+                            setInterval(() => countdownTimer(countDownDate), 1000);
+                        </script>
+                    </div>
+                    <div th:case="IN_PROGRESS">
+                        <div>
+                            <script type="text/javascript">
+                                setInterval(() => updateDuelStatus("1111"), 1000);
+                            </script>
+                            <form action="attack" method="post">
+                                <input id="attack" type="submit" value="Атаковать">
+                            </form>
+                            <form action="menu" method="post">
+                                <input id="quit" type="submit" value="Выйти">
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="footer">
                 <p th:text="${info}"/>

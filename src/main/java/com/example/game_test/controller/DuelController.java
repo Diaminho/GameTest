@@ -41,4 +41,9 @@ public class DuelController {
         //TODO fix updateDuelStatus
         return new ModelAndView(duelService.getFightInfo(modelMap, sessionId), modelMap);
     }
+
+    @RequestMapping("/setDuelInProgress")
+    public ModelAndView setDuelInProgress(ModelMap modelMap, @SessionAttribute("sessionId") Long sessionId) {
+        return new ModelAndView(duelService.setDuelInProgress(modelMap, sessionId), modelMap);
+    }
 }
