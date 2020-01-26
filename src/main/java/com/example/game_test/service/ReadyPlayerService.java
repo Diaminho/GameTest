@@ -15,7 +15,7 @@ public class ReadyPlayerService {
     }
 
     public void addPlayerToReady(Long userId){
-        readyPlayerRepository.save(new ReadyPlayer(userId, ReadyPlayer.Status.SEARCHING));
+        readyPlayerRepository.save(new ReadyPlayer(userId));
     }
 
     public void deletePlayerFromReady(Long userId){
@@ -24,5 +24,13 @@ public class ReadyPlayerService {
 
     public List<ReadyPlayer> findAll(){
         return readyPlayerRepository.findAll();
+    }
+
+    public ReadyPlayer findByPlayerId(Long playerId) {
+        return readyPlayerRepository.findByPlayerId(playerId);
+    }
+
+    public ReadyPlayer saveReadyPlayer(ReadyPlayer readyPlayer) {
+        return readyPlayerRepository.save(readyPlayer);
     }
 }

@@ -13,4 +13,13 @@ public class PlayerUtils {
                 player.getRating()
         );
     }
+
+    public static Player changePlayerStats(Player player, boolean isWinner) {
+        player.setAttack(player.getAttack() + 1);
+        player.setHp(player.getHp() + 10);
+        int rating =  isWinner ? 1: -1;
+        player.setRating(player.getRating() + rating);
+        return player;
+    }
+
 }

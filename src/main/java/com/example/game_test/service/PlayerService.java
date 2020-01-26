@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PlayerService {
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final PlayerRepository playerRepository;
 
@@ -35,7 +36,6 @@ public class PlayerService {
 
     //check if user with login and password is presented in db
     public boolean authUser(String login, String password) {
-        //TODO add logging
         return encoder.matches(password, playerRepository.findUserByLogin(login).getPassword());
     }
 }

@@ -2,6 +2,7 @@ package com.example.game_test.service;
 
 import com.example.game_test.entity.Session;
 import com.example.game_test.entity.Player;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -17,8 +18,8 @@ public class AuthService {
 
     //auth user
     public String authUser(String login, String password, ModelMap modelMap) {
-        //check if null params are presented
-        if (login.compareTo("") == 0 || password.compareTo("") == 0) {
+        //check if null or empty params are presented
+        if (StringUtils.trim(login).isBlank() || StringUtils.trim(password).isBlank()) {
             return "auth";
         }
         Player player = playerService.findUserByLogin(login);
@@ -41,6 +42,5 @@ public class AuthService {
         playerService.addUser(login, password);
         modelMap.put("info", "User " + login + " created");
         return "auth";
-        ///
     }
 }

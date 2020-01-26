@@ -10,14 +10,16 @@ public class Duel {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "first_player_id")
-    private Long firstPlayerId;
+    @JoinColumn(name = "first_player_id")
+    @ManyToOne
+    private Player firstPlayer;
 
     @Column(name = "first_player_hp")
     private Long firstPlayerHp;
 
-    @Column(name = "second_player_id")
-    private Long secondPlayerId;
+    @JoinColumn(name = "second_player_id")
+    @ManyToOne
+    private Player secondPlayer;
 
     @Column(name = "second_player_hp")
     private Long secondPlayerHp;
@@ -29,10 +31,10 @@ public class Duel {
     @Column(name = "log", columnDefinition = "text")
     private String log;
 
-    public Duel(Long firstPlayerId, Long firstPlayerHp, Long secondPlayerId, Long secondPlayerHp, Status status) {
-        this.firstPlayerId = firstPlayerId;
+    public Duel(Player firstPlayer, Long firstPlayerHp, Player secondPlayer, Long secondPlayerHp, Status status) {
+        this.firstPlayer = firstPlayer;
         this.firstPlayerHp = firstPlayerHp;
-        this.secondPlayerId = secondPlayerId;
+        this.secondPlayer = secondPlayer;
         this.secondPlayerHp = secondPlayerHp;
         this.status = status;
     }
@@ -48,20 +50,20 @@ public class Duel {
         this.id = id;
     }
 
-    public Long getFirstPlayerId() {
-        return firstPlayerId;
+    public Player getFirstPlayer() {
+        return firstPlayer;
     }
 
-    public void setFirstPlayerId(Long firstPlayerId) {
-        this.firstPlayerId = firstPlayerId;
+    public void setFirstPlayer(Player firstPlayer) {
+        this.firstPlayer = firstPlayer;
     }
 
-    public Long getSecondPlayerId() {
-        return secondPlayerId;
+    public Player getSecondPlayer() {
+        return secondPlayer;
     }
 
-    public void setSecondPlayerId(Long secondPlayerId) {
-        this.secondPlayerId = secondPlayerId;
+    public void setSecondPlayer(Player secondPlayer) {
+        this.secondPlayer = secondPlayer;
     }
 
     public Long getFirstPlayerHp() {

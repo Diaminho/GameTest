@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SessionService {
-    //TODO redo it to redis
     private final SessionRepository sessionRepository;
     private final PlayerService playerService;
 
@@ -24,21 +23,21 @@ public class SessionService {
         return sessionRepository.findSessionByUserId(userId);
     }
 
-    public Session createSessionForUserId(Long userId){
-        Session session=new Session(userId);
+    public Session createSessionForUserId(Long userId) {
+        Session session = new Session(userId);
         sessionRepository.save(session);
         return session;
     }
 
-    public void deleteSession(Long id){
+    public void deleteSession(Long id) {
         sessionRepository.delete(sessionRepository.findSessionById(id));
     }
 
-    public Player findUserBySessionId(Long sessionId){
+    public Player findUserBySessionId(Long sessionId) {
         return playerService.findById(sessionRepository.findSessionById(sessionId).getUserId());
     }
 
-    public Session findById(Long id){
+    public Session findById(Long id) {
         return sessionRepository.findById(id).orElse(null);
     }
 }

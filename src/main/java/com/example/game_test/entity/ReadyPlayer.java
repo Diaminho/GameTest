@@ -10,50 +10,20 @@ import javax.persistence.Table;
 public class ReadyPlayer {
     @Id
     @Column(name="player_id")
-    private Long userId;
+    private Long playerId;
 
-    @Column(name="status")
-    private Status status;
-
-
-    public ReadyPlayer(Long userId, Status status) {
-        this.userId = userId;
-        this.status = status;
+    public ReadyPlayer(Long playerId) {
+        this.playerId = playerId;
     }
 
     public ReadyPlayer() {
     }
 
-
-    public Long getUserId() {
-        return userId;
+    public Long getPlayerId() {
+        return playerId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public static enum Status {
-        SEARCHING,
-        READY;
-
-        public String getDisplayStatus(Status status) {
-            switch (status) {
-                case SEARCHING:
-                    return "В поиске";
-                case READY:
-                    return "Готов";
-                default:
-                    throw new IllegalStateException("Incorrect ReadyPlayer Status");
-            }
-        }
+    public void setPlayerId(Long userId) {
+        this.playerId = userId;
     }
 }

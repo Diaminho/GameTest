@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ReadyPlayerRepository extends CrudRepository<ReadyPlayer, Long> {
-    ReadyPlayer findByUserId(Long playerId);
+    ReadyPlayer findByPlayerId(Long playerId);
     List<ReadyPlayer> findAll();
 }
